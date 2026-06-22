@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A premium, responsive Split-the-Bill Calculator to divide bills, tax, and tips easily with manual or item-based splits.">
+  <title>SplitShare - Premium Bill Splitter</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glows -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <i data-lucide="receipt"></i>
+        </div>
+        <h1>SplitShare</h1>
+      </div>
+      <p class="subtitle">Divide bills, tax, and tips seamlessly among friends</p>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="app-grid">
+      
+      <!-- Left Column: Inputs and People -->
+      <section class="left-column">
+        
+        <!-- Bill Configuration Card -->
+        <div class="card bill-card">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="wallet"></i></div>
+            <h2>1. Bill Details</h2>
+          </div>
+          
+          <div class="card-body">
+            <!-- Currency & Subtotal -->
+            <div class="input-row">
+              <div class="input-group currency-select-group">
+                <label for="currency-select">Currency</label>
+                <select id="currency-select" class="form-input select-input">
+                  <option value="₹">₹ (INR)</option>
+                  <option value="$">$ (USD)</option>
+                  <option value="€">€ (EUR)</option>
+                  <option value="£">£ (GBP)</option>
+                  <option value="¥">¥ (JPY)</option>
+                </select>
+              </div>
+
+              <div class="input-group subtotal-group">
+                <label for="bill-subtotal">Subtotal (Pre-tax/tip)</label>
+                <div class="input-wrapper">
+                  <span class="input-prefix" id="subtotal-prefix">₹</span>
+                  <input type="number" id="bill-subtotal" class="form-input" placeholder="0.00" min="0" step="0.01">
+                </div>
+              </div>
+            </div>
+
+            <!-- Tax & Tip Grid -->
+            <div class="input-row tax-tip-row">
+              <!-- Tax Input -->
+              <div class="input-group">
+                <label for="tax-percentage">Tax Percentage</label>
+                <div class="input-wrapper">
+                  <input type="number" id="tax-percentage" class="form-input" placeholder="0" min="0" max="100" step="0.1" value="0">
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+
+              <!-- Tip Input -->
+              <div class="input-group">
+                <label for="tip-percentage">Tip Percentage</label>
+                <div class="input-wrapper">
+                  <input type="number" id="tip-percentage" class="form-input" placeholder="0" min="0" max="100" step="0.1" value="0">
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tip presets -->
+            <div class="tip-presets">
+              <span class="preset-label">Tip Presets:</span>
+              <div class="preset-buttons">
+                <button type="button" class="preset-btn" data-tip="5">5%</button>
+                <button type="button" class="preset-btn" data-tip="10">10%</button>
+                <button type="button" class="preset-btn" data-tip="15">15%</button>
+                <button type="button" class="preset-btn" data-tip="20">20%</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- People Details Card -->
+        <div class="card people-card">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="users"></i></div>
+            <h2>2. People & Shares</h2>
+            <button type="button" id="add-person-btn" class="btn btn-secondary btn-sm">
+              <i data-lucide="user-plus"></i> Add Person
+            </button>
+          </div>
+          
+          <div class="card-body">
+            <div id="people-list" class="people-list-container">
+              <!-- Dynamic people rows go here -->
+            </div>
+            
+            <div id="empty-state" class="empty-state">
+              <div class="empty-icon"><i data-lucide="user-check"></i></div>
+              <p>No one added yet. Click "Add Person" to start splitting.</p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Column: Results Summary (Sticky on Desktop) -->
+      <section class="right-column">
+        
+        <!-- Results Card -->
+        <div class="card results-card">
+          <div class="card-header">
+            <div class="card-icon"><i data-lucide="calculator"></i></div>
+            <h2>3. Calculations</h2>
+          </div>
+
+          <div class="card-body">
+            <!-- Totals Overview -->
+            <div class="totals-overview">
+              <div class="total-row">
+                <span>Subtotal:</span>
+                <span id="display-subtotal">₹0.00</span>
+              </div>
+              <div class="total-row">
+                <span>Tax:</span>
+                <span id="display-tax">₹0.00</span>
+              </div>
+              <div class="total-row">
+                <span>Tip:</span>
+                <span id="display-tip">₹0.00</span>
+              </div>
+              <div class="total-divider"></div>
+              <div class="total-row grand-total-row">
+                <span>Grand Total:</span>
+                <span id="display-grand-total">₹0.00</span>
+              </div>
+            </div>
+
+            <!-- Error Alerts (if manual shares exceed total, etc.) -->
+            <div id="validation-alert" class="validation-alert hidden">
+              <i data-lucide="alert-triangle"></i>
+              <span id="validation-message">Manual shares exceed the subtotal!</span>
+            </div>
+
+            <!-- Results Breakdown -->
+            <div class="breakdown-section">
+              <h3>Breakdown by Person</h3>
+              <div id="results-breakdown-list" class="results-breakdown-list">
+                <!-- Dynamic results rows go here -->
+                <div class="no-results-state">
+                  Enter bill details and add people to see the split.
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="action-buttons-group">
+              <button type="button" id="calculate-btn" class="btn btn-primary btn-block">
+                <i data-lucide="refresh-cw"></i> Calculate Split
+              </button>
+              
+              <div class="actions-split-row">
+                <button type="button" id="copy-btn" class="btn btn-outline" disabled>
+                  <i data-lucide="copy"></i> Copy Results
+                </button>
+                <button type="button" id="reset-btn" class="btn btn-danger">
+                  <i data-lucide="rotate-ccw"></i> Reset All
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+      
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer-credits">
+      <p>SplitShare &copy; 2026</p>
+    </footer>
+  </div>
+
+  <!-- Toast notification for copying -->
+  <div id="toast" class="toast hidden">
+    <i data-lucide="check-circle"></i>
+    <span>Results copied to clipboard!</span>
+  </div>
+
+  <!-- Javascript Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
