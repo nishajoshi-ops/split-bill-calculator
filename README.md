@@ -64,31 +64,4 @@ Running it through an HTTP server ensures full compatibility with clipboard APIs
 
 ---
 
-## ☁️ Deploying on Vercel
 
-Deploying a vanilla project on Vercel is free, takes less than 2 minutes, and automatically configures HTTPS.
-
-### Deploying via Vercel Git Integration (Recommended)
-1. Push this project to your GitHub, GitLab, or Bitbucket account.
-2. Go to the [Vercel Dashboard](https://vercel.com/dashboard) and sign in.
-3. Click the **"Add New..."** button and select **"Project"**.
-4. Import your repository from the Git provider list.
-5. Under the project settings:
-   * **Framework Preset**: Select **"Other"** (Vercel will auto-detect the HTML/CSS/JS file structure).
-   * **Root Directory**: `./` (current directory).
-   * **Build and Development Settings**: Keep empty/default (no build command is required!).
-6. Click **"Deploy"**. Your site is now live with a production-ready preview URL!
-
-### Deploying via Vercel CLI
-If you have Vercel CLI installed locally:
-```bash
-# Install Vercel CLI if you haven't already
-npm install -g vercel
-
-# Run vercel command in the project root directory
-vercel
-```
-Follow the interactive prompts to log in and set up your project. To deploy to production:
-```bash
-vercel --prod
-```
